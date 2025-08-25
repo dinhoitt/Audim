@@ -26,6 +26,17 @@ CACHE["get_vits_phoneme_ids"]["_symbol_to_id"] = {
     s: i for i, s in enumerate(CACHE["get_vits_phoneme_ids"]["symbols"])
 }
 
+# audioldm2/utilities/data/add_on.py에 추가
+def waveform_rs_24k(config, dl_output, metadata):
+    waveform = dl_output["waveform"]
+    sampling_rate = dl_output["sampling_rate"]
+    if sampling_rate != 24000:
+        waveform_24k = torchaudio.functional.resample(
+            waveform, orig_freq=sampling_rate, new_freq=24000
+        )
+    else:
+        waveform_24k = waveform
+    return {"waveform_24k": waveform_24k}
 
 def get_vits_phoneme_ids(config, dl_output, metadata):
     pad_token_id = 0
